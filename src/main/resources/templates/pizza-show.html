@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body th:object="${pizza}">
+	<th:block th:include="frags/frag-login.html :: login"></th:block>
+	<h1>Dettaglio pizza [[*{name}]]</h1>
+	<h2><a th:href="@{/}">HOME</a></h2>
+	<div sec:authorize="hasAuthority('ADMIN')">
+			<a th:href="@{/edit/{id}(id=*{id})}"> MODIFICA </a>
+				<form
+					th:action="@{/delete/{id}(id=*{id})}"
+					method="POST"
+				>
+					<input type="submit" value="ELIMINA">
+				</form>
+	</div>
+	
+			<h3>[[*{name}]]</h3>
+			<img style="width: 500px;" th:src="@{${pizza.image}}">
+			<h4> <span th:text="${#numbers.formatDecimal(pizza.price, 0, 'POINT', 2, 'COMMA')}"></span> euro</h4>
+			<h5>[[*{ingredients}]]</h5>	
+			
+			<h3>Offerte speciali</h3>
+			<h4 sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/pizze/offers/{id}(id=${pizza.id})}">Aggiungi Offerta</a></h4>
+			<ul >
+				<li
+					th:each="offer : ${pizza.specialOffers}"
+					th:object="${offer}"
+				>
+					<span>[[${offer.getTitle()}]] da: [[${offer.getHtmlStartDate()}]] a: [[${offer.getHtmlEndDate()}]]</span>
+					<br/>
+					<br/>
+					<span sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/offers/edit/{id}(id=*{id})}">Modifica</a></span>
+					
+					<form 
+						sec:authorize="hasAuthority('ADMIN')"
+						th:action="@{/offers/delete/{id}(id=*{id})}"
+						method="POST"
+						style="display: inline;"
+					>
+						<input type="submit" value="ELIMINA" >	
+					</form>
+					<br/>
+					<br/>
+				</li>
+			</ul>	
+			
+			<h3>Ingredienti</h3>
+			<ul>
+				<li 
+					th:each="ing : ${pizza.ingredienti}"
+					th:object="${ing}"
+				>
+					[[*{name}]]
+				</li>
+			</ul>
+			
+		
+
+</body>
+</html>

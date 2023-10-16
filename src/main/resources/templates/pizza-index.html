@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:include="frags/frag-login.html :: login"></th:block>
+	<div th:if="${#lists.size(pizze) <= 0}">
+		<h1>Non sono Presenti pizze</h1>
+		<h2 sec:authorize="hasAuthority('ADMIN')" ><a th:href="@{/ingredients}" >Lista ingredienti</a></h2>
+	</div>
+	
+	<div th:if="${#lists.size(pizze) > 0}">
+		<h1>Lista pizze</h1>
+		<h2 sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/ingredients}">Lista ingredienti</a></h2>
+		<form>
+			<label for="name">Cerca una pizza</label>
+			<input type="text" name="name" th:value="${name}">
+			<input type="submit" value="Cerca">
+		</form>
+		<div>
+			<h3 sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/create}">Aggiungi una pizza</a></h3>
+		</div>
+		<ul>
+			<li
+				th:each="pizza : ${pizze}"
+				th:object="${pizza}"
+			>
+				<h3>[[*{name}]]</h3>
+				<img style="width: 500px;" th:src="@{${pizza.image}}">
+				<h4> <span th:text="${#numbers.formatDecimal(pizza.price, 0, 'POINT', 2, 'COMMA')}"></span> euro</h4>
+				<h5>[[*{ingredients}]]</h5>
+				<a th:href="@{/pizze/{id}(id=*{id})}"> DETTAGLIO </a>
+				<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/edit/{id}(id=*{id})}"> MODIFICA </a>
+				<form
+					sec:authorize="hasAuthority('ADMIN')"
+					th:action="@{/delete/{id}(id=*{id})}"
+					method="POST"
+				>
+					<input type="submit" value="ELIMINA">
+				</form>
+				
+			</li>
+		</ul>
+	</div>
+	
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<h1>Aggiuni una pizza</h1>
+	<br/>
+	
+	<form
+		th:object="${pizza}"
+		
+		method="POST"
+	>
+		<div>
+			<label for="name">Nome</label>
+			<input type="text" name="name" th:field="*{name}">
+			<div  th:if="${#fields.hasErrors('name')}">
+				<ul>
+					<li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+				</ul>
+			</div>			
+		</div>
+		
+		<div>
+			<label for="price">prezzo</label>
+			<input type="number" name="price" th:field="*{price}" step=".01">
+			<div  th:if="${#fields.hasErrors('price')}">
+				<ul>
+					<li th:each="err : ${#fields.errors('price')}" th:text="${err}"></li>
+				</ul>
+			</div>			
+		</div>
+		
+		<div>
+			<label for="image">Url immagine</label>
+			<input type="text" name="image" th:field="*{image}">
+			<div  th:if="${#fields.hasErrors('image')}">
+				<ul>
+					<li th:each="err : ${#fields.errors('image')}" th:text="${err}"></li>
+				</ul>
+			</div>			
+		</div>
+		
+		<div>
+			<label for="ingredients">Descrizione</label>
+			<input type="text" name="ingredients" th:field="*{ingredients}">
+			<div  th:if="${#fields.hasErrors('ingredients')}">
+				<ul>
+					<li th:each="err : ${#fields.errors('ingredients')}" th:text="${err}"></li>
+				</ul>
+			</div>			
+		</div>
+			
+		<div th:each="ing : ${ingredients}" th:object="${ing}" >
+			<input
+				type="checkbox"			
+				th:id="${'ingredient-' + ing.id}"
+				th:value="*{id}"
+				th:field="${pizza.ingredienti}"
+			>
+			<label th:for="${'ingredient-' + ing.id}">
+				[[*{name}]]
+			</label>
+		</div>
+		
+		<input type="submit" value="Aggiungi" >
+	</form>
+	
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2><a th:href="@{/}">HOME</a></h2>
+	<div th:if="${#lists.size(ingredients) <= 0}">
+		<h1>Non sono Presenti ingredienti</h1>
+	</div>
+	
+	<div th:if="${#lists.size(ingredients) > 0}">
+		<h1>Lista Ingredienti</h1>
+		
+		<div>
+			<h3><a th:href="@{/ingredients/create}">Aggiungi un ingrediente</a></h3>
+		</div>
+		<ul>
+			<li
+				th:each="ing : ${ingredients}"
+				th:object="${ing}"
+			>
+				<h3>[[*{name}]]</h3>
+				
+				<form
+					th:action="@{/ingredients/delete/{id}(id=${ing.id})}"
+					method="POST"
+				>
+					<input type="submit" value="ELIMINA">
+				</form>
+				
+			</li>
+		</ul>
+	</div>
+	
+
+</body>
+</html>
